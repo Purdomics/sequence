@@ -1,0 +1,11 @@
+#Title dna4-2.matrix
+#Scoring table for alignment examples
+#range -2, 4
+#comment identities = 4
+#comment mismatch = -2
+#comment for lecture examples
+   A  C  G  T
+A  4 -2 -2 -2
+C -2  4 -2 -2
+G -2 -2  4 -2
+T -2 -2 -2  4
