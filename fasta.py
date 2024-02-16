@@ -19,6 +19,17 @@ import sys
 
 # noinspection PyMethodParameters
 class Fasta:
+    """=============================================================================================
+    Read, write, and modify FastA formatted sequence files. This class is iterable.
+
+    Fasta format:
+    >sequence_id documentation_continues_till_newline
+    sequence
+    sequence
+    ...
+    >next_sequence_id ...
+
+    ============================================================================================="""
     codon2aa = {"AAA": "K", "AAC": "N", "AAG": "K", "AAT": "N",
                 "ACA": "T", "ACC": "T", "ACG": "T", "ACT": "T",
                 "AGA": "R", "AGC": "S", "AGG": "R", "AGT": "S",
@@ -105,7 +116,8 @@ class Fasta:
         open a file for reading with error checking. If file can't be opened, exit with status=1.
         sets both self.filename and self.fh
 
-        :param filename: string      path to file
+        :param filename: string     path to file
+        :param mode: string         'r' or 'w', any valid file open mode
         :return: filehandle
         -----------------------------------------------------------------------------------------"""
         # print('opening:', filename)
@@ -150,7 +162,7 @@ class Fasta:
             try:
                 line = line.rstrip('\n\r ')
             except TypeError:
-                # in case of a byte string
+                # in case of a byte string, not an error if line is bytes
                 line = line.decode()
                 line = line.rstrip('\n\r ')
 
@@ -271,6 +283,7 @@ class Fasta:
         codons with ambiguity characters are translated as 'X';
         currently uses standard amino acid code
         TODO use supplied genetic code
+
         :param frame: integer, offset from beginning of sequence
         :param direction: string, forward (+) or reverse(-)
         :return: Fasta object (new)
@@ -313,9 +326,9 @@ class Fasta:
         3 len-1
         4 len-2
         5 len-3
+
         :return: list of Fasta, the six reading frames translated
         -----------------------------------------------------------------------------------------"""
-        i = 0
         rf = []
         for direction in ('+', '-'):
             for frame in range(3):
@@ -328,6 +341,7 @@ class Fasta:
         Returns a dictionary with the composition of the sequence
         If uppercase is true, characters are converted to uppercase
 
+        :param fasta: self
         :param uppercase: boolean
         :return: dict, int; keys are sequence letters, values are counts
         -----------------------------------------------------------------------------------------"""
