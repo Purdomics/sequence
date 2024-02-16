@@ -62,10 +62,12 @@ class Fasta:
         elif filename:
             fasta.fh = fasta.open(filename)
 
-    # def __iter__(self):
-    #     return self
 
     def __iter__(self):
+        """-----------------------------------------------------------------------------------------
+        Generator function that reads the next sequence and updates internal varialbles
+        :return: (string, string, string)   id, doc, and seq of newly read sequence
+        -----------------------------------------------------------------------------------------"""
         first = True
 
         for line in self.fh:
@@ -75,6 +77,7 @@ class Fasta:
             if line.startswith('>'):
                 # title line
                 if not first:
+                    # on first pass there is no sequence to yield
                     yield self.id, self.doc, self.seq
                 else:
                     first = False
@@ -88,7 +91,7 @@ class Fasta:
             else:
                 # sequence line
                 self.seq += line.rstrip()
-                print(len(self.seq))
+                # print(len(self.seq))
 
         if self.seq:
             yield self.id, self.doc, self.seq
