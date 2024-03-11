@@ -75,26 +75,18 @@ class Fasta:
             fasta.fh = fh
         elif filename:
             fasta.fh = fasta.open(filename, mode)
+            next(fasta)
 
-    def __iter__(self):
-        """-----------------------------------------------------------------------------------------
-        Generator function that reads the next sequence and updates internal varialbles
-        :return: (string, string, string)   id, doc, and seq of newly read sequence
-        -----------------------------------------------------------------------------------------"""
-        first = True
+    def __next__(self):
+        return self
 
+    def get_entry(self):
         for line in self.fh:
             if line.isspace():
                 continue
 
             if line.startswith('>'):
                 # title line
-                if not first:
-                    # on first pass there is no sequence to yield
-                    yield self.id, self.doc, self.seq
-                else:
-                    first = False
-
                 field = line.rstrip().split(' ', maxsplit=1)
                 self.id = field[0].replace('>', '')
                 if len(field) > 1:
@@ -104,10 +96,42 @@ class Fasta:
             else:
                 # sequence line
                 self.seq += line.rstrip()
-                # print(len(self.seq))
+
+
+
+    def __iter__(self):
+        """-----------------------------------------------------------------------------------------
+        Generator function that reads the next sequence and updates internal varialbles
+        :return: (string, string, string)   id, doc, and seq of newly read sequence
+        -----------------------------------------------------------------------------------------"""
+        for line in self.fh:
+            if line.isspace():
+                continue
+
+            if line.startswith('>'):
+                # title line
+                if self.seq:
+                    yield {'id':self.id, 'doc':self.doc, 'seq':self.seq }
+
+                field = line.rstrip().split(' ', maxsplit=1)
+                self.id = field[0].replace('>', '')
+                self.doc = ''
+                if len(field) > 1:
+                    self.doc = field[1]
+                self.seq = ''
+
+            else:
+                # sequence line
+                self.seq += line.rstrip()
 
         if self.seq:
-            yield self.id, self.doc, self.seq
+            # if the loop ends with stored sequence, yield it here
+            yield {'id':self.id, 'doc':self.doc, 'seq':self.seq }
+
+        # reset internal values so that the next call won't duplicate'
+        self.id = ''
+        self.doc = ''
+        self.seq = ''
 
         return
 
@@ -138,14 +162,16 @@ class Fasta:
             while fasta.next():
                ...
         -----------------------------------------------------------------------------------------"""
-        return fasta.read()
+        a = []
+        a = next(fasta)
+        return next(fasta)
 
     def read(fasta):
         """-----------------------------------------------------------------------------------------
         read one sequence from the file, leave the following line in buffer
         usage:
 
-        TODO now that the class is iterable, this isn't really needed, replace with cal to __iter__()
+        TODO now that the class is iterable, this isn't really needed, replace with call to __iter__()
         fasta.read()
         -----------------------------------------------------------------------------------------"""
 
