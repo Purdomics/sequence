@@ -81,6 +81,10 @@ class Fasta:
         return self
 
     def get_entry(self):
+        """-----------------------------------------------------------------------------------------
+        read an entry from the open file handle
+        updates self.id, self.doc, self.seq
+        -----------------------------------------------------------------------------------------"""
         for line in self.fh:
             if line.isspace():
                 continue
