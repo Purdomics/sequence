@@ -105,7 +105,7 @@ class Fasta:
 
     def __iter__(self):
         """-----------------------------------------------------------------------------------------
-        Generator function that reads the next sequence and updates internal varialbles
+        Generator function that reads the next sequence and updates internal variables
         :return: (string, string, string)   id, doc, and seq of newly read sequence
         -----------------------------------------------------------------------------------------"""
         for line in self.fh:
