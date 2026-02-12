@@ -105,7 +105,7 @@ class Fasta:
 
     def __iter__(self):
         """-----------------------------------------------------------------------------------------
-        Generator function that reads the next sequence and updates internal varialbles
+        Generator function that reads the next sequence and updates internal variables
         :return: (string, string, string)   id, doc, and seq of newly read sequence
         -----------------------------------------------------------------------------------------"""
         for line in self.fh:
@@ -130,9 +130,9 @@ class Fasta:
 
         if self.seq:
             # if the loop ends with stored sequence, yield it here
-            yield {'id':self.id, 'doc':self.doc, 'seq':self.seq }
+            yield self
 
-        # reset internal values so that the next call won't duplicate'
+        # reset internal values so that the next call won't duplicate
         self.id = ''
         self.doc = ''
         self.seq = ''
