@@ -115,7 +115,7 @@ class Fasta:
             if line.startswith('>'):
                 # title line
                 if self.seq:
-                    yield {'id':self.id, 'doc':self.doc, 'seq':self.seq }
+                    yield self
 
                 field = line.rstrip().split(' ', maxsplit=1)
                 self.id = field[0].replace('>', '')
